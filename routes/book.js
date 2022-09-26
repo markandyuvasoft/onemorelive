@@ -20,6 +20,24 @@ router.post("/post",checkauth,(req,res,next)=>{
   })
 //post method end......................................
 
+
+router.get("get/:id",async(req,res)=>{
+
+    try{
+     
+        const _id= req.params.id
+
+     const getid= await Book.findById(_id)
+
+     res.status(201).send(getid)
+    }
+    catch(err)
+    {
+        res.status(400).send(err)
+    }
+})
+
+
 //get method start......................................
 router.get("/get",checkauth,async(req,res)=>{
 

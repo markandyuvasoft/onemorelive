@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import  Jwt  from 'jsonwebtoken'
 import checkAuth from '../middleware/check-auth.js'
 import Auth from '../models/auth.js'
+import Book from '../models/book.js'
 
 
 const authrouter=express.Router()
@@ -98,5 +99,41 @@ authrouter.post('/login',(req,res,next)=>{
 //.................USER LOGIN END.................................................................................................................
 
 
+//SEARCH PAGINATION LIMIT START....................................................................................................................
+authrouter.get("/search",async(req,res,next)=>{
 
+    try{
+
+        const {page=1, limit=150 ,sort,search=""}=req.query;
+
+        const data= await Book.find({name:{$regex: search, $options: "i" }})         
+
+        .sort({[sort]:1})        // sorting name, id ,etc
+
+        .limit(limit * 1)       // apply limit to show data
+
+        .skip((page-1) * limit)     // pagination formula
+
+        res.send({page:page, limit:limit, data:data})
+
+        const total = await Book.countDocuments({
+        
+        name:{ $regex: search, $options: "i" }   // search name according
+            
+    });
+    }catch (error) {
+
+    console.log(error)
+
+    res.status(500).json({
+
+        error:error
+        })
+    }
+})
+
+
+
+
+//SEARCH PAGINATION LIMIT END....................................................................................................................
 export default authrouter;
