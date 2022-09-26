@@ -21,7 +21,7 @@ router.post("/post",checkauth,(req,res,next)=>{
 //post method end......................................
 
 
-router.get("get/:id",async(req,res)=>{
+router.get("/get/:id",async(req,res)=>{
 
     try{
      
