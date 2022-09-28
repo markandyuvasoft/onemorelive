@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import * as path from 'path'
 import bcrypt from 'bcrypt'
 import  Jwt  from 'jsonwebtoken'
+import _ from 'lodash';
 import checkAuth from '../middleware/check-auth.js'
 import Auth from '../models/auth.js'
 import Book from '../models/book.js'
@@ -12,40 +13,47 @@ const authrouter=express.Router()
 
 
 //....................................USER REGISTER START.............................................................................................
-authrouter.post("/register",(req,res,next)=>{
-    bcrypt.hash(req.body.password,10,(err,hash)=>{
-    
-        if(err)
-        {
-            return res.status(500).json({
-                error:err
-            })
-        }
-        else
-        {
-            const user= new Auth({
-                _id: new mongoose.Types.ObjectId,
-        
-                email:req.body.email,
-                password:hash,
-                type:req.body.type,
-                status:req.body.status
-            })
-            user.save()
-            .then(result=>{
-                res.status(200).json({
-                    new_user:result
-                })
-            })
-            .catch(err=>{
-                res.status(500).json({
-                    error:err
-                })
-            })
-        }
-    })
-    
-    })
+
+
+
+authrouter.post("/register", async (req, res) => {
+
+    const { name, email, password, } = req.body;
+  
+    if (
+      !name ||
+      !email ||
+      !password 
+      
+    ) {
+      return res.status(422).json({ error: " plzz filled the field propraly" });
+    } 
+    try {
+      const userExist =await  Auth.findOne({ email: email });
+  
+      if (userExist) {
+        return res.status(422).json({ error: "email already exist" });
+      }  else {
+        const hash=await bcrypt.hash(password,10)
+
+        const user = new Auth({
+            name:name,
+            email:email,
+            password:hash,
+        });
+  
+        // const userRegister =
+        const userRegister = await user.save();
+  
+        res.status(201).json({ message: "user register successfully" });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+  });
+  
+
 //....................................USER REGISTER END.............................................................................................
   
 
@@ -127,13 +135,10 @@ authrouter.get("/search",async(req,res,next)=>{
 
     res.status(500).json({
 
-        error:error
+    error:error
         })
     }
 })
-
-
-
 
 //SEARCH PAGINATION LIMIT END....................................................................................................................
 export default authrouter;
