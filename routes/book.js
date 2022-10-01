@@ -101,8 +101,10 @@ router.delete("/delete/:id",checkauth,async(req,res)=>{
             const _id= req.params.id
     
             const del= await Book.findByIdAndDelete(_id)
+
     
-            res.status(201).send(del)
+    
+            res.status(200).send({message: "your data is delete"})
         }
         catch(err)
         {
