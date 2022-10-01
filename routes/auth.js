@@ -14,16 +14,12 @@ const authrouter=express.Router()
 
 //....................................USER REGISTER START.............................................................................................
 
-
-
 authrouter.post("/register", async (req, res) => {
 
     const { name, email, password, } = req.body;
   
     if (
-      !name ||
-      !email ||
-      !password 
+      !name || !email || !password 
       
     ) {
       return res.status(422).json({ error: " plzz filled the field propraly" });
@@ -52,7 +48,6 @@ authrouter.post("/register", async (req, res) => {
     }
 
   });
-  
 
 //....................................USER REGISTER END.............................................................................................
   
