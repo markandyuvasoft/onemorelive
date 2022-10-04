@@ -11,7 +11,7 @@ const bookSchema=new mongoose.Schema({
     
         },
     age:{
-        type:String,
+        type:Number,
       
         },
     city:{
