@@ -58,7 +58,7 @@ authrouter.post('/login',(req,res,next)=>{
 
 const {email,password}=req.body;
 if(!email||!password){
-    res.send("plzz fill proper")
+    res.send("plzz fill the data")
 } else{
     Auth.find({email:req.body.email})
     
