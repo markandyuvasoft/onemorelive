@@ -55,6 +55,11 @@ authrouter.post("/register", async (req, res) => {
 //.................USER LOGIN START.................................................................................................................
 authrouter.post('/login',(req,res,next)=>{
 
+
+const {email,password}=req.body;
+if(!email||!password){
+    res.send("plzz fill proper")
+} else{
     Auth.find({email:req.body.email})
     
     .exec()
@@ -98,6 +103,53 @@ authrouter.post('/login',(req,res,next)=>{
             err:err
         })
     })
+}
+
+
+
+    // Auth.find({email:req.body.email})
+    
+    // .exec()
+    // .then(user=>{
+
+    //     if(user.length < 1)
+    //     {
+    //         return res.status(401).json({
+    //             msg: 'user not found'
+    //         })
+    //     }
+    //     bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
+
+    //         if(!result)
+    //         {
+    //        return res.status(401).json({
+    //                 msg: 'not match'
+    //             })
+    //         }
+    //         if(result)
+    //         {
+    //             const token = Jwt.sign({
+
+    //             email:user[0].email,
+                
+    //         },
+    //             'i am markand',
+    //             {
+    //                 expiresIn:"24h"
+    //             }
+    //             )
+    //             res.status(200).json({
+
+    //                 token:token
+    //             })
+    //         }
+    //     })
+    // })
+    // .catch(err=>{
+    //     res.status(500).json({
+    //         err:err
+    //     })
+    // })
 })
 //.................USER LOGIN END.................................................................................................................
 

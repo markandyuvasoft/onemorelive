@@ -17,10 +17,6 @@ const bookSchema=new mongoose.Schema({
     city:{
         type:String,
         },
-    
- 
-    
-        
 })
 
 const Book=mongoose.model('node',bookSchema)
