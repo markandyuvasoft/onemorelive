@@ -7,7 +7,7 @@ const authSchema = new mongoose.Schema({
         type:String,
         unique:true,
     },
-    password:{
+    password:{ 
         type:String,
         },
 

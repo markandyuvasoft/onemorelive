@@ -53,103 +53,86 @@ authrouter.post("/register", async (req, res) => {
   
 
 //.................USER LOGIN START.................................................................................................................
+// authrouter.post('/login',(req,res,next)=>{
+
+
+// const {email,password}=req.body;
+// if(!email||!password){
+//     res.send("plzz fill the data")
+// } else{
+//     Auth.find({email:req.body.email})
+    
+//     .exec()
+//     .then(user=>{
+
+//         if(user.length < 1)
+//         {
+//             return res.status(401).json({
+//                 msg: 'user not found'
+//             })
+//         }
+//         bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
+
+//             if(!result)
+//             {
+//            return res.status(401).json({
+//                     msg: 'not match'
+//                 })
+//             }
+//             if(result)
+//             {
+//                 const token = Jwt.sign({
+
+//                 email:user[0].email,
+                
+//             },
+//                 'i am markand',
+//                 {
+//                     expiresIn:"24h"
+//                 }
+//                 )
+//                 res.status(200).json({
+
+//                     token:token
+//                 })
+//             }
+//         })
+//     })
+//     .catch(err=>{
+//         res.status(500).json({
+//             err:err
+//         })
+//     })
+// }
+// })
+
+
 authrouter.post('/login',(req,res,next)=>{
 
-
-const {email,password}=req.body;
-if(!email||!password){
-    res.send("plzz fill the data")
-} else{
-    Auth.find({email:req.body.email})
-    
-    .exec()
-    .then(user=>{
-
-        if(user.length < 1)
-        {
-            return res.status(401).json({
-                msg: 'user not found'
-            })
+    const {email,password} = req.body
+    if(!email || !password){
+       return res.status(422).json({error:"please add email or password"})
+    }
+    Auth.findOne({email:email})
+    .then(savedUser=>{
+        if(!savedUser){
+           return res.status(422).json({error:"Invalid Email or password"})
         }
-        bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
-
-            if(!result)
-            {
-           return res.status(401).json({
-                    msg: 'not match'
-                })
+        bcrypt.compare(password,savedUser.password)
+        .then(doMatch=>{
+            if(doMatch){
+               const token = Jwt.sign({_id:savedUser._id},"i am markand")
+               const {_id,name,email} = savedUser
+               res.send({token,user:{_id,name,email}})
             }
-            if(result)
-            {
-                const token = Jwt.sign({
-
-                email:user[0].email,
-                
-            },
-                'i am markand',
-                {
-                    expiresIn:"24h"
-                }
-                )
-                res.status(200).json({
-
-                    token:token
-                })
+            else{
+                return res.status(422).send({error:"Invalid Email or password"})
             }
         })
-    })
-    .catch(err=>{
-        res.status(500).json({
-            err:err
+        .catch(err=>{
+            console.log(err)
         })
     })
-}
-
-
-
-    // Auth.find({email:req.body.email})
-    
-    // .exec()
-    // .then(user=>{
-
-    //     if(user.length < 1)
-    //     {
-    //         return res.status(401).json({
-    //             msg: 'user not found'
-    //         })
-    //     }
-    //     bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
-
-    //         if(!result)
-    //         {
-    //        return res.status(401).json({
-    //                 msg: 'not match'
-    //             })
-    //         }
-    //         if(result)
-    //         {
-    //             const token = Jwt.sign({
-
-    //             email:user[0].email,
-                
-    //         },
-    //             'i am markand',
-    //             {
-    //                 expiresIn:"24h"
-    //             }
-    //             )
-    //             res.status(200).json({
-
-    //                 token:token
-    //             })
-    //         }
-    //     })
-    // })
-    // .catch(err=>{
-    //     res.status(500).json({
-    //         err:err
-    //     })
-    // })
 })
 //.................USER LOGIN END.................................................................................................................
 
