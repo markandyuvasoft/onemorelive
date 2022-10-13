@@ -155,7 +155,7 @@ router.post("/post",auth,async(req,res,next)=>{
 
 
 //get method start ONLY JIS USER NE POST KARA USKA DATA SHOW......................................
-router.get("/mypost",auth,async(req,res)=>{
+router.get("/get",auth,async(req,res)=>{
 
     Book.find({postedby:req.user._id})
     .populate("postedby", "_id name").then(mypost=>{
