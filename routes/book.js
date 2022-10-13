@@ -179,18 +179,21 @@ router.delete("/delete",auth,async(req,res)=>{
 
 })
 
-//get method start......................................
-// router.get("/get",async(req,res)=>{
+router.get("/get/:id",async(req,res)=>{
 
-//     Post.find().populate("postedby","_id name").then(posts=>{
+    try{
+     
+        const _id= req.params.id
 
-//         res.send({posts})
-//     }).catch(err=>{
-//         console.log("err");
-//     })
- 
-// })
-//get method end......................................
+     const getid= await Book.findById(_id)
+
+     res.status(201).send(getid)
+    }
+    catch(err)
+    {
+        res.status(400).send(err)
+    }
+})
 
 
 export default router
